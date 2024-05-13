@@ -1,19 +1,24 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.throttling import AnonRateThrottle
 from.models import Chat
 from.serializers import ChatSerializer
+from rest_framework.permissions import IsAuthenticated
 
 class ChatView(APIView):
     throttle_classes = [AnonRateThrottle]  # Apply rate limiting
 
     def post(self, request): 
-        token = request.headers.get('Authorization')
-        if token:
-            token = token.split(' ')[1]
+        auth_token = request.headers.get('Authorization')
+        if auth_token:
+            auth_token = auth_token.split(' ')[1]
             try:
-                user = Token.objects.get(key=token).user
+                Token.objects.get(key=auth_token)
+                # Assuming you have a way to authenticate the user with the token
+                # This part needs to be implemented based on your authentication system
+                user = IsAuthenticated(request, token=auth_token)  # You need to implement this function
             except Token.DoesNotExist:
                 return Response({"message": "Invalid token"}, status=401)
             
@@ -26,7 +31,7 @@ class ChatView(APIView):
             chat.save()
             
             # Deduct tokens from the user's balance
-            user.tokens -= 100 #Remove 100 tokens form the total
+            user.tokens -= 100  # Remove 100 tokens from the total
             if user.tokens < 0:
                 user.tokens = 0  # Prevent negative balances
             user.save()
@@ -43,11 +48,11 @@ class ChatView(APIView):
             
             token = auth_header.split(' ')[1]
             try:
-                user = Token.objects.get(key=token).user
+                Token.objects.get(key=token).user
             except Token.DoesNotExist:
                 return Response({"message": "Invalid token (trapped on exception)"}, status=401)
             
-            chats = Chat.objects.filter(user=user).order_by('-id')
+            chats = Chat.objects.filter(user=request.user).order_by('-id')  # Assuming request.user is the authenticated user
             serializer = ChatSerializer(chats, many=True)
             return Response(serializer.data, status=200)
         

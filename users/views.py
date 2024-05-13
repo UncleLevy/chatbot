@@ -4,7 +4,8 @@ from .serializers import UserSerializer, AuthUserSerializer
 from rest_framework import status
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import status
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from users.models import User
 
 class RegisterView(APIView):
     def post(self, request):
@@ -22,5 +23,7 @@ class LoginView(TokenObtainPairView):
     permission_classes = [AllowAny]
 
 class TokenBalanceView(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request):
-        return Response({"data": {"balance": 0}, "message": "Balance retrieved successfully"}, status=200)
+        user = User.objects.get(username__iexact = request.user)
+        return Response({"data": {"balance": user.token }, "message": "Balance retrieved successfully"}, status=200)
