@@ -2,6 +2,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from chat.models import Chat
 
 User = get_user_model()
 
@@ -23,3 +24,9 @@ class AuthUserSerializer(TokenObtainPairSerializer):
             "tokens": self.user.token,
         })
         return data
+    
+
+class ChatSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Chat
+        fields =  ('message', 'response', 'timestamp')
