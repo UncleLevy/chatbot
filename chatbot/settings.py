@@ -37,9 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'chat',
     'rest_framework.authtoken',
-    'users',
+    'api',
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
@@ -130,7 +129,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-AUTH_USER_MODEL = "users.User"
+AUTH_USER_MODEL = "api.User"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

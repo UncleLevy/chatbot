@@ -5,8 +5,8 @@ from rest_framework import status
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from users.models import User
-from chat.models import Chat
+from api.models import User
+from .models import Chat
 
 class RegisterView(APIView):
     def post(self, request):
