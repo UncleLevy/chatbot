@@ -11,13 +11,6 @@
 ## Introduction
 This project is a chatbot system built using Django. It's designed to handle customer support, information retrieval, and other interactive tasks. The chatbot can understand user queries, generate appropriate responses, and perform automated actions based on predefined rules.
 
-
-
-
-
-
-
-
 ## Getting Started
 ### Prerequisites
 - Python 3.8+
